@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -7,6 +8,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.example.myapplication.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -15,36 +17,38 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var edtHeight : EditText
     private lateinit var btnResult : Button
     private lateinit var tvResult : TextView
+    private lateinit var binding : ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         installSplashScreen()
-        setContentView(R.layout.activity_main)
+        setContentView(binding.root)
 
-        edtLength = findViewById(R.id.edt_length)
-        edtWidth = findViewById(R.id.edt_wide)
-        edtHeight = findViewById(R.id.edt_height)
-        btnResult = findViewById(R.id.btn_result)
-        tvResult = findViewById(R.id.tv_result)
+        edtLength = binding.edtLength
+        edtWidth = binding.edtWide
+        edtHeight = binding.edtHeight
+        btnResult = binding.btnResult
+        tvResult = binding.tvResult
 
         btnResult.setOnClickListener(this)
 
     }
 
     override fun onClick(view: View?) {
-        if (view?.id == R.id.btn_result){
+        when (view?.id){
+            R.id.btn_result ->{
             val getLength = edtLength.text.toString().trim()
             val getWidth = edtWidth.text.toString().trim()
             val getHeight = edtHeight.text.toString().trim()
             val msg = "JANGAN KOSONG"
-
             if (getLength.isEmpty()){
                 edtLength.error = msg
                 return
             }
 
             if (getWidth.isEmpty()){
-                edtWidth.error = msg 
+                edtWidth.error = msg
                 return
             }
 
@@ -53,8 +57,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 return
             }
 
-            val result = getLength.toDouble() * getWidth.toDouble() * getHeight.toDouble()
-            tvResult.text = result.toString()
+            val hasil = getLength.toDouble() * getWidth.toDouble() * getHeight.toDouble()
+            tvResult.text = hasil.toString()
+
+            val intent = Intent(this@MainActivity,result::class.java)
+            intent.putExtra(result.result, tvResult.text)
+                startActivity(intent)
+            }
         }
     }
+
+
 }
